@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Сайт «СТЯЖКА PROчно»
 
-## Getting Started
+Сайт компании: механизированная полусухая стяжка пола, Уфа и Республика
+Башкортостан. Три маршрута: главная `/`, цены `/ceny`, политика ПДн `/politika`.
+Вырос из личной визитки Расула (сентябрь 2026); эталон структуры - страница цен
+конкурента, но с нашей формулой: толщина рядом с ценой, цена после замера не
+меняется, разрез пола вместо стоковых фото.
 
-First, run the development server:
+## Стек
+
+- Next.js 16 (App Router, Turbopack) + React 19 + TypeScript
+- Tailwind CSS v4, только тёмная тема
+- shadcn/ui (radix-nova): формы, кнопки, аккордеон, скелетон
+- Aceternity UI: `spotlight-new`, `3d-card`, `moving-border`
+- Magic UI: `magic-card`, `border-beam`, `grid-pattern`, `blur-fade`
+- Geist Sans + Geist Mono с кириллицей через `next/font` (self-hosted)
+- Playwright - смоук-тесты на 4 раскладках (1440 / 768 / iPhone 13 / 360)
+
+Компоненты библиотек скопированы в `src/components/ui/` через `shadcn` CLI -
+это исходники проекта, обновлений из реестра не прилетает.
+
+## Запуск
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
+npm run build   # прод-сборка, обязательна перед выкладкой
+npm run lint
+npm test        # Playwright: собирает прод, поднимает :3105, 44 проверки
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Что где
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Путь | Что это |
+|---|---|
+| `src/data/pricing.ts` | **все цены и условия** + дата синхронизации; в JSX цифр нет |
+| `src/data/company.ts` | контакты, реквизиты оператора ПДн |
+| `src/data/content.ts` | состав работ, этапы, объекты, FAQ - каждый пункт со ссылкой на источник в базе знаний |
+| `src/data/geo.ts` | геосервисы: ссылки на карточки, рейтинг, число отзывов, дата снятия; пока null - блок «Мы на картах» и строка в подвале не рендерятся |
+| `public/materials/` | 5 фото материалов для разреза (основание, плёнка, утеплитель, смесь, затирка), WebP; сгенерированные иллюстрации 2026-09-15, на сайте подписаны как иллюстрации. Исходные PNG - `RasulAI/output/imagegen/floor-materials-pack-2026-09-15.zip` |
+| `src/app/globals.css` | палитра бренда и токены темы |
+| `src/app/layout.tsx` | шрифты, метаданные, шапка/подвал |
+| `src/app/opengraph-image.tsx` | OG-картинка для мессенджеров: знак + заголовок + ставки (шрифт - `src/app/fonts/`) |
+| `public/logo-horizontal.png`, `public/logo-square.png` | логотип из `business/assets/logo/`, графитовый фон вырезан в прозрачный; горизонтальный - шапка и подвал, знак с затирочной машиной - первый экран, визитки в контактах, OG |
+| `src/components/site/` | секции страниц, шапка, подвал, калькулятор, таблицы цен |
+| `src/components/ui/` | компоненты shadcn / Aceternity / Magic UI |
+| `src/lib/site.ts` | канонический адрес сайта |
+| `tests/site.spec.ts` | Playwright-проверки |
+| `legacy/` | старая статическая визитка, удалить после приёмки |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Источники данных
 
-## Learn More
+Всё содержимое прослеживается до базы знаний «Уян проект 1»:
+`business/products/pricing.md` (цены), `overview.md` (состав работ),
+`audience/objections.md` и `portraits.md` (FAQ), `assets/ip-afanasiev/`
+(договор, памятки, политика ПДн), `assets/brand-guidelines.md` (палитра, лого).
+Что в базе не подтверждено - на сайте отсутствует: срок гарантии для частных
+лиц, годы работы, число объектов, часы работы, м²/смену.
 
-To learn more about Next.js, take a look at the following resources:
+## Правила
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Меняется прайс - правим `src/data/pricing.ts` и `PRICING_SYNCED_AT`. Больше нигде.
+- Палитра снята с логотипа: графит `#2E3132`, оранжевый `#EF7F1A`, кремовый `#FFFBDB`. Новых цветов не вводить.
+- Форма ничего не хранит и не отправляет на сервер: собирает текст и открывает WhatsApp или Telegram на рабочем номере (по выбору), текст можно скопировать. Появится серверный приём заявок - потребуется полная политика ПДн и уведомление РКН (см. `d3-soglasie-pdn.md` в базе).
+- Анимации уважают «уменьшить движение»: луч, бегущая рамка и луч по границе формы не рендерятся.
+- Типографика под аудиторию 35+: основной текст от 16px, подписи от 14px, без мелкого разряженного капслока.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Контакты и условия (подтверждено владельцем 2026-09-07)
 
-## Deploy on Vercel
+- Рабочий телефон `8 (993) 055-35-37` - Рамиль (замерщик, специалист по обработке заявок), первый контакт. На нём Telegram, WhatsApp и Max: форма и все «написать» ведут туда (`messengerLink()` в `company.ts`); у Max нет ссылки по номеру - упоминается текстом. Руководитель Расул `8 (917) 355-35-37` - второй. Порядок: позвонить → не дозвонились, написать → руководитель.
+- Базовая толщина ровно 7 см, +50 ₽/м² за каждый следующий сантиметр.
+- Выезд: первые 20 км от базы (Уфа, Бакалинская, 9) включены, дальше (км − 20) × 250 ₽.
+- Площади до 25 м² - индивидуально; калькулятор в этом случае цифру не показывает.
+- Подпись в подвале: сначала ООО «Скай Групп» (ИНН 0276136947, ОГРН 1120280000752), потом ИП Афанасьев.
+- Гарантия 2 года на прочность, целостность и ровность - в hero, условиях, FAQ, блоке ухода; тот же срок в шаблонах договоров базы знаний.
+- Почта для запросов по ПДн - `sky-grup@yandex.ru` (действующий ящик ООО); появится `info@` на домене - заменить в `company.ts`.
+- Нормы для блока «стандарт» и FAQ - выписка `business/products/normy.md` в базе знаний (СП 71 табл. 8.5: 2 / 4 мм; СП 29 п. 8.3-8.4: М150 / М200).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Перед деплоем (открытые вопросы владельцу)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Домен `styazhka-prochno.ru` покупает владелец (план в базе знаний); при сборке на прод прописать `NEXT_PUBLIC_SITE_URL`.
+2. Фото объектов и отзывы - только с отдельным согласием на распространение (ст. 10.1 152-ФЗ).
+3. Геосервисы: когда карточки заведены и раскручены - вписать ссылки, рейтинг и дату в `src/data/geo.ts`; блок включится сам (решение владельца 2026-09-07: до этого не показывать).
+4. «М100 для жилых» - по решению владельца на сайте не упоминается; в СП 29.13330.2011 такой нормы нет.

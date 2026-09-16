@@ -1,0 +1,133 @@
+:root {
+  --color-accent: #f9810d;
+  --color-dark: #2d3030;
+  --color-light: #fff5d4;
+  --color-sand: #f2ead8;
+  --color-muted: #7f7f7d;
+  --shadow: 0 24px 60px rgba(45, 48, 48, 0.16);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+  background:
+    linear-gradient(180deg, rgba(249, 129, 13, 0.08), rgba(249, 129, 13, 0)),
+    var(--color-sand);
+  color: var(--color-dark);
+}
+
+.page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.card {
+  width: min(100%, 420px);
+  padding: 28px;
+  border: 1px solid rgba(45, 48, 48, 0.1);
+  border-radius: 28px;
+  background: rgba(255, 245, 212, 0.92);
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  height: 6px;
+  background: var(--color-accent);
+}
+
+.eyebrow {
+  margin: 0 0 20px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+.tagline {
+  margin: 16px 0 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.description {
+  margin: 14px 0 0;
+  max-width: 28ch;
+  line-height: 1.6;
+  color: rgba(45, 48, 48, 0.84);
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 28px;
+  padding: 14px 20px;
+  min-height: 52px;
+  border-radius: 999px;
+  background: var(--color-dark);
+  color: var(--color-light);
+  font-weight: 800;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  transition:
+    transform 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.cta:hover,
+.cta:focus-visible {
+  background: #1f2121;
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(45, 48, 48, 0.2);
+}
+
+.cta:focus-visible {
+  outline: 3px solid rgba(249, 129, 13, 0.4);
+  outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 16px;
+  }
+
+  .card {
+    padding: 24px 20px;
+    border-radius: 22px;
+  }
+
+  .tagline {
+    font-size: 1rem;
+  }
+
+  .description {
+    font-size: 0.98rem;
+  }
+
+  .cta {
+    width: 100%;
+  }
+}

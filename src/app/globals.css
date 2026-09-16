@@ -1,26 +1,154 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
+/* ── Палитра «СТЯЖКА PROчно» ────────────────────────────────────────────
+   Эталон снят с логотипа: графит #2E3132, оранжевый #EF7F1A, кремовый #FFFBDB.
+   Источник: business/assets/brand-guidelines.md в базе знаний «Уян проект 1».
+   Остальные ступени - затемнения графита под тёмную тему, не новые цвета.  */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
+  --color-ink: #131617;
+  --color-ink-raise: #1a1e1f;
+  --color-surface: #212526;
+  --color-graphite: #2e3132;
+  --color-line: #33383a;
+  --color-line-soft: #262a2b;
+  --color-cream: #fffbdb;
+  --color-muted-ink: #a5a69d;
+  --color-orange: #ef7f1a;
+  --color-orange-dim: #b85f0e;
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-geist-sans);
+
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.75);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.5);
+  --radius-2xl: calc(var(--radius) * 2);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Сайт живёт только в тёмной теме - светлой версии бренда для веба нет,
+   поэтому :root и .dark совпадают. */
+:root,
+.dark {
+  --radius: 0.5rem;
+
+  --background: #131617;
+  --foreground: #e4e2d8;
+
+  --card: #1a1e1f;
+  --card-foreground: #e4e2d8;
+  --popover: #1a1e1f;
+  --popover-foreground: #e4e2d8;
+
+  --primary: #ef7f1a;
+  --primary-foreground: #131617;
+
+  --secondary: #212526;
+  --secondary-foreground: #e4e2d8;
+
+  --muted: #212526;
+  --muted-foreground: #a5a69d;
+
+  --accent: #2e3132;
+  --accent-foreground: #fffbdb;
+
+  --destructive: #d9563a;
+
+  --border: #33383a;
+  --input: #33383a;
+  --ring: #ef7f1a;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "ss01", "cv01";
+  }
+
+  /* Фокус - оранжевой рамкой, видимой на графите. */
+  :focus-visible {
+    outline: 2px solid var(--color-orange);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--color-orange);
+    color: var(--color-ink);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Штамп чертежа: моноширинная микро-подпись с разрядкой. */
+  .stamp {
+    @apply font-mono text-[14px] leading-tight tracking-[0.08em] uppercase;
+  }
+
+  /* Значения в технической таблице - обычным шрифтом и крупнее: моноширинная
+     кириллица в мелком кегле читается заметно хуже. */
+  .spec-value {
+    @apply text-[17px] leading-snug text-foreground/90;
+  }
+
+  /* Трафаретный заголовок: плотный, без «воздушной» AI-разрядки. */
+  .stencil {
+    @apply font-sans font-extrabold uppercase;
+    letter-spacing: -0.035em;
+  }
+
+  /* Технический разделитель: линия с засечкой слева, как на чертеже. */
+  .rule {
+    @apply relative h-px w-full bg-line-soft;
+  }
+  .rule::before {
+    content: "";
+    @apply absolute left-0 -top-1 h-2 w-px bg-orange;
+  }
+}
+
+/* Пользователь просил меньше движения - выключаем всё, включая ambient-слои. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
